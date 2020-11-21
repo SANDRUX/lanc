@@ -3,7 +3,7 @@
 Entry::Entry(string value)
 {
     this->value = value;
-    random();
+    random(); //key becomes random number
 }
 
 Entry::Entry(int key, string value)
@@ -14,7 +14,6 @@ Entry::Entry(int key, string value)
 
 void Entry::random()
 {
-    srand(time(NULL));
     key = (rand() % 100); //key becomes random number between 0 and 99
 }
 
@@ -30,5 +29,10 @@ string Entry::getValue() const
 
 string Entry::toString() const
 {
-    return "(" + to_string(key) + ", " + value + ")";
+    return "(" + to_string(key) + ", " + value + ")"; // if key is 3 and value is "hai", it becomes (3, hai)
+}
+
+void Entry::setValue(string value)
+{
+	this->value = value;
 }
