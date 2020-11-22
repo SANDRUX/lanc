@@ -51,13 +51,8 @@ def hex_to_float(hex_num): # turn hex number to float
 		whole_bits = 4
 		fraction_bits = 3
 	elif bytes_count == 2:
-<<<<<<< HEAD
-		whole_bits = 9
-		fraction_bits = 6
-=======
 		whole_bits = 6
 		fraction_bits = 9
->>>>>>> c39b72081fabd143e48b61c06737fb5165051808
 	elif bytes_count == 3:
 		whole_bits = 8
 		fraction_bits = 15
