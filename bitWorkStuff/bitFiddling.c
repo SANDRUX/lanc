@@ -49,8 +49,6 @@ int hex_to_int(char * hex, size_t size)
         num -= power;
         return num;
     }
-
-    return 1;
 }
 
 float hex_to_float(char * hex, size_t size)
