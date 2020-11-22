@@ -22,7 +22,6 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-
     if ((strlen(array) % 2) == 1)
     {
         char * temp = "0";
@@ -34,22 +33,18 @@ int main()
     {
         case 'U':
         printf("%ud", hex_to_uint(array, strlen(array)));
-
         break;
 
         case 'S':
         printf("%d", hex_to_int(array, strlen(array)));
-
         break;
 
         case 'F':
         printf("%f", hex_to_float(array, strlen(array)));
-
         break;
 
         default:
         printf("Invalid data type");
-
     }
 
     return 0;

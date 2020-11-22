@@ -42,7 +42,6 @@ int hex_to_int(char * hex, size_t size)
     {
         return num;
     }
-
     else
     {
         num -= power;
@@ -66,5 +65,54 @@ float hex_to_float(char * hex, size_t size)
         binary[i] = (decimal >> (bits - 1 - i)) & 1;
     }
 
-    return (float)1;
+    int whole_bits;
+    int fraction_bits;
+
+    switch (bytes) 
+    {
+        case 1:
+            whole_bits = 4;
+            fraction_bits = 4;
+            break;
+
+        case 2:
+            whole_bits = 10;
+            fraction_bits = 6;
+            break;
+
+        case 3:
+            whole_bits = 16;
+            fraction_bits = 8;
+            break;
+
+        case 4:
+            whole_bits = 22;
+            fraction_bits = 10;
+    }
+
+    int s = binary[0];
+    int whole = 0;
+    int fraction = 0;
+
+    for (int i = 0; i < whole_bits; i++)
+    {
+        whole += binary[wholebits - i] * pow(2, i);
+    }
+        
+    for (int i = 0; i < fraction_bits; i++)
+    {
+        fraction += binary[bits - 1 - i] * pow(2, i);
+    }
+
+    float exponent = whole - (pow(2, whole_bits - 1) - 1);
+    float mantissa = 1;
+
+    for(int i = 0; i < fraction_bits; i++)
+    {
+        mantissa += binary[whole_bits + 1 + i] / pow(2, i + 1);
+    }
+
+    float result = sign * pow(2, exponent) * mantissa;
+
+    return result;
 }
