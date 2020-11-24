@@ -31,7 +31,7 @@ column_name = 'headerText'
 driver_path = r'C:\Users\Nika\Downloads\geckodriver.exe'
 driver = webdriver.Firefox(executable_path = driver_path)
 
-ping_seconds = 12
+ping_seconds = 10
 
 driver.set_page_load_timeout(ping_seconds)
 driver.get(URL)
@@ -54,7 +54,13 @@ for element in hospital_elements:
 
 hospital_index = 0
 
+wanted_hospitals = 2
+wanted_categories = 3
+
 for hospital in hospitals:
+	if hospital_index == wanted_hospitals:
+		break
+
 	# hospitals_dropdown = driver.find_element_by_name(hospitals_dropdown_name)
 	
 	print('Checking for ' + hospital)
@@ -69,15 +75,18 @@ for hospital in hospitals:
 
 	categories_data = []
 
-	hospital_data = [ hospital, categories_data ]
+	hospital_data = [hospital]
 
 	for i in range(category_count):
+		if i == wanted_categories:
+			break
+
 		category_id = category_id_prefix + str(i)
 
 		category = driver.find_element_by_id(category_id)
 
 		rows = []
-		category_data = [category.text, rows]
+		category_data = [category.text]
 
 		print('Starting for category ' + category.text)
 
@@ -87,7 +96,7 @@ for hospital in hospitals:
 
 		# prices_table = driver.find_element_by_id(prices_table_id)
 
-		column_elements = driver.find_element_by_class_name(column_name)
+		column_elements = driver.find_elements_by_class_name(column_name)
 		columns = []
 
 		for column_element in column_elements:
@@ -95,7 +104,7 @@ for hospital in hospitals:
 
 		rows.append(columns)
 
-		all_rows = driver.find_element_by_xpath('//table/tbody/tr')
+		all_rows = driver.find_elements_by_xpath('//table/tbody/tr')
 
 		data_rows = all_rows[1:-1]
 		page_row = all_rows[-1] # TODO crawl through pages
@@ -103,14 +112,19 @@ for hospital in hospitals:
 		for data_row in data_rows:
 			fields = []
 
-			for field in data_row:
+			for field in data_row.find_elements_by_tag_name('td'):
 				fields.append(field.text)
 
 			rows.append(fields)
 
+		category_data.append(columns) # each category might have different columns for all we know
+		category_data.append(rows)
 		categories_data.append(category_data)
 
 		print('Done for category ' + category_id)
+
+	hospital_data.append(categories_data)
+	data.append(hospital_data)
 
 	print('Done for ' + hospital)
 
@@ -120,25 +134,41 @@ print('Driver out')
 
 # we have data, now write it to excel
 
+print('Data we have:')
+print(data)
+
 workbook = xlsxwriter.Workbook('result.xlsx')
 
 for datum in data:
 	hospital = datum[0]
 	categories_data = datum[1]
 
-	sheet = workbook.add_worksheet(hospital)
+	sheet_name = hospital if len(hospital) <= 31 else hospital[:31]
+	sheet = workbook.add_worksheet(sheet_name)
 
-	y = 0
+	sheet.write(0, 0, hospital)
+
+	y = 1
 
 	for category_data in categories_data:
 		category_name = category_data[0]
-		table_data = category_data[1]
+		columns = category_data[1]
+		rows = category_data[2]
 
-		sheet.write(y, 0, category_name)
 		y += 1
 
-		for row in table_data:
+		sheet.write(y, 0, category_name)
+		
+		y += 1
+		x = 0
+
+		for column in columns:
+			sheet.write(y, x, column)
+			x += 1	
+
+		for row in rows:
 			x = 0
+			y += 1
 
 			for field in row:
 				sheet.write(y, x, field)
