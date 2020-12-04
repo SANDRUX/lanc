@@ -1,6 +1,6 @@
 #include "thread.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
     int insert_status_array[2];
     int vectorSize;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    while (1)
+    while(1)
     {
         for (int i = 0; i < vectorSize; i++)
         {
@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-static void delay()
+static
+void delay()
 {
     struct timespec tim;
 
@@ -79,7 +80,8 @@ static void delay()
     //printf("2nd something");
 }
 
-static void parse_arguments(int numCommands, char **commands, int *statusArray)
+static
+void parse_arguments(int numCommands, char ** commands, int * statusArray)
 {
     if (numCommands != 4)
     {
@@ -113,9 +115,11 @@ static void parse_arguments(int numCommands, char **commands, int *statusArray)
         printf("Invalid arguments!");
         exit(EXIT_FAILURE);
     }
+
 }
 
-static void *thread_func(void *arg)
+static
+void * thread_func(void * arg)
 {
 
     sigset_t mask;
@@ -133,7 +137,7 @@ static void *thread_func(void *arg)
     {
         sleep(1);
 
-        pair *threadPair = (pair *)arg;
+        pair * threadPair = (pair *)arg;
         index = rand() % threadPair->size;
 
         pthread_mutex_lock(&vecMtx);
@@ -161,14 +165,17 @@ static void *thread_func(void *arg)
                 pthread_mutex_unlock(&vecMtx);
                 pthread_mutex_unlock(&gsdMtx);
             }
+
         }
+
     }
 }
 
-static void siginit_handler()
+static
+void siginit_handler()
 {
     int randPosition = rand() % sig_data;
-    int randValue = (rand() % 255) + 1;
+    int randValue = (rand() % 255 ) + 1;
 
     pthread_mutex_lock(&vecMtx);
 
@@ -177,7 +184,8 @@ static void siginit_handler()
     pthread_mutex_unlock(&vecMtx);
 }
 
-static void sigusr1_handler()
+static
+void sigusr1_handler()
 {
     pthread_mutex_lock(&gsdMtx);
 
@@ -190,12 +198,14 @@ static void sigusr1_handler()
     do
     {
         index = rand() % numberOfThreads;
-    } while (threadID[index] == (pthread_t)-1);
+    }
+    while (threadID[index] == (pthread_t)-1);
 
     pthread_cancel(threadID[index]);
 }
 
-static void sigquit_handler()
+static
+void sigquit_handler()
 {
     exit(EXIT_SUCCESS);
 }

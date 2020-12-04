@@ -10,31 +10,37 @@
 #include <sys/types.h>
 #include <time.h>
 
-int *vector;
+int * vector;
 
 typedef struct
 {
-    int *vec;
+    int * vec;
     int size;
-} pair;
+}pair;
 
 pthread_mutex_t vecMtx = PTHREAD_MUTEX_INITIALIZER, gsdMtx = PTHREAD_MUTEX_INITIALIZER;
 
 int sig_data;
 int numberOfThreads;
 
-pthread_t *threadID;
+pthread_t * threadID;
 
 int guessedValue = 0;
 
-static void delay();
+static
+void delay();
 
-static void parse_arguments(int, char **, int *);
+static
+void parse_arguments(int , char ** , int * );
 
-static void *thread_func(void *);
+static
+void * thread_func(void * );
 
-static void siginit_handler();
+static
+void siginit_handler();
 
-static void sigusr1_handler();
+static
+void sigusr1_handler();
 
-static void sigquit_handler();
+static
+void sigquit_handler();
