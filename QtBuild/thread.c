@@ -122,6 +122,15 @@ static
 void * thread_func(void * arg)
 {
 
+
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+    pthread_t thisID = pthread_self();
+
+    pthread_cleanup_push(cleanup_handler, &thisID);
+    pthread_cleanup_pop(1);
+
     sigset_t mask;
 
     sigemptyset(&mask);
@@ -209,3 +218,19 @@ void sigquit_handler()
 {
     exit(EXIT_SUCCESS);
 }
+
+static
+void cleanup_handler(void * arg)
+{
+    pthread_t * id =  (pthread_t *)arg;
+
+    int counter = 0;
+
+    while (threadID[counter] != *id)
+    {
+        counter++;
+    }
+    threadID[counter] = -1;
+}
+
+

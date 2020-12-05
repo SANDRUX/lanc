@@ -44,3 +44,7 @@ void sigusr1_handler();
 
 static
 void sigquit_handler();
+
+static
+void cleanup_handler(void *);
+
